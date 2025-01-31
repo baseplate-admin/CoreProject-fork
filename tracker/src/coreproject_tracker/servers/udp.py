@@ -29,13 +29,6 @@ log = Logger(namespace="coreproject_tracker")
 
 
 class UDPServer(DatagramProtocol):
-    def datagramReceived(self, data, addr):
-        deferred = threads.deferToThread(self.__datagramReceived, data, addr)
-        deferred.addCallback(self.on_task_done, addr)
-        deferred.addErrback(self.on_task_error, addr)
-        # res = self._datagramReceived(data, addr)
-        # self.on_task_done(res, addr)
-
     def on_task_done(self, result, addr):
         self.transport.write(result, addr)
 
@@ -44,6 +37,13 @@ class UDPServer(DatagramProtocol):
         self.transport.write(failure.getErrorMessage(), addr)
 
     def __datagramReceived(self, data, addr):
+        deferred = threads.deferToThread(self.__datagramReceived, data, addr)
+        deferred.addCallback(self.on_task_done, addr)
+        deferred.addErrback(self.on_task_error, addr)
+        # res = self._datagramReceived(data, addr)
+        # self.on_task_done(res, addr)
+
+    def datagramReceived(self, data, addr):
         """
         Called when a datagram (UDP packet) is received.
 
@@ -163,53 +163,51 @@ class UDPServer(DatagramProtocol):
         """
         action = params["action"]
         if action == ACTIONS.CONNECT:
-            packet = b"".join(
-                [
-                    to_uint32(ACTIONS.CONNECT),
-                    to_uint32(params["transaction_id"]),
-                    params["connection_id"],
-                ]
+            packet = (
+                struct.pack("!II", ACTIONS.CONNECT, params["transaction_id"])
+                + params["connection_id"]
             )
 
         elif action == ACTIONS.ANNOUNCE:
-            packet = b"".join(
-                [
-                    to_uint32(ACTIONS.ANNOUNCE),
-                    to_uint32(params["transaction_id"]),
-                    to_uint32(params["interval"]),
-                    to_uint32(params["incomplete"]),
-                    to_uint32(params["complete"]),
-                    params["peers"],
-                ]
-            )
-
-        elif action == ACTIONS.SCRAPE:
-            scrape_response = [
-                to_uint32(ACTIONS.SCRAPE),
-                to_uint32(params["transaction_id"]),
-            ]
-
-            for info_hash, file in params["files"].items():
-                scrape_response.extend(
-                    [
-                        to_uint32(file["complete"]),
-                        to_uint32(
-                            file["downloaded"]
-                        ),  # Note: this only provides a lower-bound
-                        to_uint32(file["incomplete"]),
-                    ]
+            packet = (
+                struct.pack(
+                    "!IIIII",
+                    ACTIONS.ANNOUNCE,
+                    params["transaction_id"],
+                    params["interval"],
+                    params["incomplete"],
+                    params["complete"],
                 )
-
-            packet = b"".join(scrape_response)
-
-        elif action == ACTIONS.ERROR:
-            packet = b"".join(
-                [
-                    to_uint32(ACTIONS.ERROR),
-                    to_uint32(params.get("transaction_id", 0)),
-                    str(params.get("failure_reason", "")).encode(),
-                ]
+                + params["peers"]
             )
+
+        # elif action == ACTIONS.SCRAPE:
+        #     scrape_response = [
+        #         to_uint32(ACTIONS.SCRAPE),
+        #         to_uint32(params["transaction_id"]),
+        #     ]
+
+        #     for info_hash, file in params["files"].items():
+        #         scrape_response.extend(
+        #             [
+        #                 to_uint32(file["complete"]),
+        #                 to_uint32(
+        #                     file["downloaded"]
+        #                 ),  # Note: this only provides a lower-bound
+        #                 to_uint32(file["incomplete"]),
+        #             ]
+        #         )
+
+        #     packet = b"".join(scrape_response)
+
+        # elif action == ACTIONS.ERROR:
+        #     packet = b"".join(
+        #         [
+        #             to_uint32(ACTIONS.ERROR),
+        #             to_uint32(params.get("transaction_id", 0)),
+        #             str(params.get("failure_reason", "")).encode(),
+        #         ]
+        #     )
 
         else:
             raise ValueError(f"Action not implemented: {action}")

@@ -168,8 +168,7 @@ class HTTPServer(resource.Resource):
             if not isinstance(event, str):
                 raise ValueError("`event` is not a string")
             params["event"] = convert_event_name_to_event_enum(event)
-
-        # Webtorrent doesn't provide event
-        except KeyError:
+        except KeyError:  # Webtorrent doesn't provide event
             params["event"] = None
+
         return params
