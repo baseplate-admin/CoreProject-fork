@@ -32,6 +32,7 @@
         <div class="flex flex-col items-center">
             <a href="#/welcome">welcome</a>
             <a href="#/server">server</a>
+            <a href="#/test">test</a>
         </div>
     {/if}
 {/if}
