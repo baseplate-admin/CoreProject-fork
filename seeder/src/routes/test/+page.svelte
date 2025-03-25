@@ -9,243 +9,210 @@
     <div
         class="animate-orbit-1 absolute h-[10vh] w-[10vh] rounded-full border-2 border-dashed border-white opacity-100"
     >
-        <one-s-one
+        <one
             class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></one-s-one>
-        <one-s-two
+        ></one>
+        <two
             class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></one-s-two>
+        ></two>
     </div>
 
     <!-- Orbit 2 -->
     <div
         class="animate-orbit-2 absolute h-[14vh] w-[14vh] rounded-full border-2 border-dashed border-white opacity-90"
     >
-        <div
+        <one
             class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></one>
+        <two
             class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        ></two>
 
-        <div
+        <three
             class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></three>
+        <four
             class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        ></four>
 
-        <div
+        <five
             class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></five>
+        <six
             class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        ></six>
 
-        <div
+        <seven
             class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></seven>
+        <eight
             class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        ></eight>
     </div>
 
     <!-- Orbit 3 -->
     <div
         class="animate-orbit-3 absolute h-[18vh] w-[18vh] rounded-full border-2 border-dashed border-white opacity-90"
     >
-        <div
+        <one
             class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></one>
+        <two
             class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        ></two>
 
-        <div
+        <three
             class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></three>
+        <four
             class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        ></four>
 
-        <div
+        <five
             class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></five>
+        <six
             class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        ></six>
 
-        <div
+        <seven
             class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        ></seven>
+        <eight
             class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        ></eight>
     </div>
 
     <!-- Orbit 4 -->
     <div
         class="animate-orbit-4 absolute h-[22vh] w-[22vh] rounded-full border-2 border-dashed border-white opacity-90"
     >
-        <div
-            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        <one
+            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 translate-y-1 rounded-full bg-white"
+        ></one>
+        <two
+            class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-3 rounded-full bg-white"
+        ></two>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        <three
+            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 -translate-y-1 rounded-full bg-white"
+        ></three>
+        <four
+            class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-3 rounded-full bg-white"
+        ></four>
 
-        <div
-            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        <five
+            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 translate-y-2 rounded-full bg-white"
+        ></five>
+        <six
+            class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-3 rounded-full bg-white"
+        ></six>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        <seven
+            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
+        ></seven>
+        <eight
+            class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-3 rounded-full bg-white"
+        ></eight>
     </div>
 
     <!-- Orbit 5 -->
     <div
         class="animate-orbit-5 absolute h-[26vh] w-[26vh] rounded-full border-2 border-dashed border-white opacity-90"
     >
-        <div
-            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <one
+            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 translate-y-2 rounded-full bg-white"
+        ></one>
+        <two
             class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        ></two>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <three
+            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 -translate-y-2 rounded-full bg-white"
+        ></three>
+        <four
             class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        ></four>
 
-        <div
-            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <five
+            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 translate-x-2 rounded-full bg-white"
+        ></five>
+        <six
             class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        ></six>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <seven
+            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 -translate-x-2 rounded-full bg-white"
+        ></seven>
+        <eight
             class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        ></eight>
     </div>
 
     <!-- Orbit 6 -->
     <div
         class="animate-orbit-6 absolute h-[30vh] w-[30vh] rounded-full border-2 border-dashed border-white opacity-50"
     >
-        <div
-            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <one
+            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 translate-y-2 rounded-full bg-white"
+        ></one>
+        <two
             class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        ></two>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <three
+            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 -translate-y-2 rounded-full bg-white"
+        ></three>
+        <four
             class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        ></four>
 
-        <div
-            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <five
+            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 translate-x-2 rounded-full bg-white"
+        ></five>
+        <six
             class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        ></six>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <seven
+            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 -translate-x-2 rounded-full bg-white"
+        ></seven>
+        <eight
             class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        ></eight>
     </div>
 
     <!-- Orbit 7 -->
     <div
         class="animate-orbit-7 absolute h-[34vh] w-[34vh] rounded-full border-2 border-dashed border-white opacity-40"
     >
-        <div
-            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <one
+            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 translate-y-2 rounded-full bg-white"
+        ></one>
+        <two
             class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
+        ></two>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <three
+            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 -translate-y-2 rounded-full bg-white"
+        ></three>
+        <four
             class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
+        ></four>
 
-        <div
-            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <five
+            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 translate-x-2 rounded-full bg-white"
+        ></five>
+        <six
             class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
+        ></six>
 
-        <div
-            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
+        <seven
+            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 -translate-x-2 rounded-full bg-white"
+        ></seven>
+        <eight
             class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
-    </div>
-
-    <!-- Orbit 8 -->
-    <div
-        class=" animate-orbit-8 absolute h-[38vh] w-[38vh] rounded-full border-2 border-dashed border-white opacity-30"
-    >
-        <div
-            class="planet animate-planet-1 absolute left-1/4 top-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute left-2/4 top-0 h-4 w-4 -translate-y-2 rounded-full bg-white"
-        ></div>
-
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute bottom-0 right-2/4 h-4 w-4 translate-y-2 rounded-full bg-white"
-        ></div>
-
-        <div
-            class="planet animate-planet-1 absolute left-0 top-1/4 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute left-0 top-2/4 h-4 w-4 -translate-x-2 rounded-full bg-white"
-        ></div>
-
-        <div
-            class="planet animate-planet-1 absolute bottom-1/4 right-0 h-4 w-4 rounded-full bg-white"
-        ></div>
-        <div
-            class="planet animate-planet-1 absolute bottom-2/4 right-0 h-4 w-4 translate-x-2 rounded-full bg-white"
-        ></div>
+        ></eight>
     </div>
 </div>
 
