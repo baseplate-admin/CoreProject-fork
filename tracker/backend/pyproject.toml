@@ -10,7 +10,6 @@ dependencies = [
     "bencode-py>=4.0.0",
     "flask-orjson>=2.0.0; platform.python_implementation == 'CPython'",
     "hypercorn>=0.17.3",
-    "interpreters-pep-734>=0.5.0; python_version < '3.14'",
     "quart>=0.20.0",
     "quart-cors>=0.8.0",
     "quart-redis>=3.0.0",
