@@ -189,6 +189,15 @@ wheels = [
 ]
 
 [[package]]
+name = "interpreters-pep-734"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/a9/ae2a1958523551c3cfbd548b5d3c105af941775895c09a12c2b3636bbd9e/interpreters_pep_734-0.5.0.tar.gz", hash = "sha256:5f308f945c6ded5bd4bb334117c50405dacb84f862cb572bdd5d96b3de3f07f6", size = 15304 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e9/43/01e1a318fc830ba40ae8bb36228fc1597c363865629f738a99a5626c9193/interpreters_pep_734-0.5.0-py3-none-any.whl", hash = "sha256:b07c6fc233004317ff41aa1645ea7d2e1725896e4aa541da64236a170787e2b0", size = 19098 },
+]
+
+[[package]]
 name = "itsdangerous"
 version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -386,6 +395,7 @@ dependencies = [
     { name = "bencode-py" },
     { name = "flask-orjson", marker = "platform_python_implementation == 'CPython'" },
     { name = "hypercorn" },
+    { name = "interpreters-pep-734", marker = "python_full_version < '3.14'" },
     { name = "quart" },
     { name = "quart-cors" },
     { name = "quart-redis" },
@@ -408,6 +418,7 @@ requires-dist = [
     { name = "bencode-py", specifier = ">=4.0.0" },
     { name = "flask-orjson", marker = "platform_python_implementation == 'CPython'", specifier = ">=2.0.0" },
     { name = "hypercorn", specifier = ">=0.17.3" },
+    { name = "interpreters-pep-734", marker = "python_full_version < '3.14'", specifier = ">=0.5.0" },
     { name = "quart", specifier = ">=0.20.0" },
     { name = "quart-cors", specifier = ">=0.8.0" },
     { name = "quart-redis", specifier = ">=3.0.0" },

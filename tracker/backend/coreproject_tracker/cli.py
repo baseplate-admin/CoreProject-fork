@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import sys
-from concurrent.futures import ProcessPoolExecutor
 
 import anyio
 import click
@@ -13,6 +12,12 @@ from coreproject_tracker.enums import IP
 from coreproject_tracker.envs import WORKERS_COUNT
 from coreproject_tracker.functions import check_ip_type
 from coreproject_tracker.servers import run_udp_server as _run_udp_server
+
+try:
+    from concurrent.futures import InterpreterPoolExecutor
+except ImportError:
+    from interpreters_backport.concurrent.futures import InterpreterPoolExecutor
+
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s"
@@ -40,7 +45,7 @@ async def _main_async_wrapper(host: str, port: int) -> None:
                 )
     loop = asyncio.get_event_loop()
 
-    with ProcessPoolExecutor() as executor:
+    with InterpreterPoolExecutor() as executor:
         # Run one instance of UDP server in the main process
         loop.run_in_executor(executor, run_udp_server, host, port)
 

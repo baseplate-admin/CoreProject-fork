@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   experimental: {
+    webpackMemoryOptimizations: true,
     turbo: {
       rules: {
         "*.svg": {
