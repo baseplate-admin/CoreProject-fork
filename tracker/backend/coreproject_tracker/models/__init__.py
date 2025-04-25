@@ -6,9 +6,7 @@ Notes:
     autogenerate to work.
 """
 
-from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import declarative_base
 
 
-class Base(AsyncAttrs, DeclarativeBase):
-    pass
+Base = declarative_base()

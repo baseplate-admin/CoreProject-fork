@@ -1,9 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
+import asyncio
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -53,27 +54,57 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+# def run_migrations_online() -> None:
+#     """Run migrations in 'online' mode.
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
+#     In this scenario we need to create an Engine
+#     and associate a connection with the context.
 
-    """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+#     """
+#     from sqlalchemy import engine_from_config
+#     connectable = engine_from_config(
+#         config.get_section(config.config_ini_section, {}),
+#         prefix="sqlalchemy.",
+#         poolclass=pool.NullPool,
+#     )
+
+#     with connectable.connect() as connection:
+#         context.configure(connection=connection, target_metadata=target_metadata)
+
+#         with context.begin_transaction():
+#             context.run_migrations()
+
+
+async def run_migrations_online():
+    # grab the URL from alembic.ini
+    url = config.get_main_option("sqlalchemy.url")
+    # create an AsyncEngine (not the sync one)
+    connectable = create_async_engine(
+        url,
         poolclass=pool.NullPool,
     )
 
-    with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
-
+    # define a sync callback that does both configure + run_migrations
+    def do_run_migrations(sync_conn):
+        context.configure(
+            connection=sync_conn,
+            target_metadata=target_metadata,
+            # optional extras:
+            # compare_type=True, compare_server_default=True, etc.
+        )
+        # start a transaction and run migrations
         with context.begin_transaction():
             context.run_migrations()
+
+    # open a single connection and run the callback
+    async with connectable.connect() as conn:
+        await conn.run_sync(do_run_migrations)
+
+    # dispose when done
+    await connectable.dispose()
 
 
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    run_migrations_online()
+    asyncio.run(run_migrations_online())
