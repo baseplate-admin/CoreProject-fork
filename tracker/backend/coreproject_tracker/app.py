@@ -9,7 +9,9 @@ try:
 except ImportError:
     HAS_FLASK_ORJSON = False
 
+from coreproject_tracker.database import engine
 from coreproject_tracker.envs import REDIS_DATABASE, REDIS_HOST, REDIS_PORT
+from coreproject_tracker.models import Base
 from coreproject_tracker.servers import http_blueprint, ws_blueprint
 
 
@@ -28,5 +30,11 @@ def make_app() -> Quart:
 
     app.register_blueprint(http_blueprint)
     app.register_blueprint(ws_blueprint)
+
+    # Startup Events
+    @app.before_serving
+    async def _():
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
     return app
