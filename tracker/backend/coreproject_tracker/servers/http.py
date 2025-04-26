@@ -6,8 +6,10 @@ from importlib.metadata import version
 import bencodepy  # type: ignore
 from quart import Blueprint, json, jsonify, request
 from quart_redis import get_redis  # type: ignore
+from sqlalchemy.dialects.postgresql import insert
 
 from coreproject_tracker.constants import ANNOUNCE_INTERVAL
+from coreproject_tracker.database import get_session
 from coreproject_tracker.datastructures import HttpDatastructure, RedisDatastructure
 from coreproject_tracker.enums import EVENT_NAMES, IP
 from coreproject_tracker.functions import (
@@ -19,12 +21,14 @@ from coreproject_tracker.functions import (
     hdel,
     hget,
 )
+from coreproject_tracker.models import Torrent
 
 http_blueprint = Blueprint("http", __name__)
 
 
 @http_blueprint.route("/announce")
-async def http_endpoint():
+@get_session()
+async def http_endpoint(session):
     ip = request.headers.get("X-Real-IP", request.remote_addr)
 
     if len(request.args) == 0:
@@ -45,10 +49,22 @@ async def http_endpoint():
                     request.args.get("event")
                 ),
             }
-        data = HttpDatastructure(**_data)
     except Exception as e:
         print(e)
         return str(e), HTTPStatus.BAD_REQUEST
+
+    data = HttpDatastructure(**_data)
+    if data.event_name == EVENT_NAMES.COMPLETE:
+        stmt = (
+            insert(Torrent)
+            .values(info_hash=data.info_hash, completed=1)
+            .on_conflict_do_update(
+                index_elements=[Torrent.info_hash],
+                set_={"completed": Torrent.completed + 1},
+            )
+        )
+        await session.execute(stmt)
+        await session.commit()
 
     if data.event_name == EVENT_NAMES.STOP:
         await hdel(data.info_hash, f"{data.peer_ip}:{data.port}")
@@ -116,6 +132,8 @@ async def http_endpoint():
         peers6.extend(_peers6)
         seeders += _seeders
         leechers += _leechers
+
+    
 
     output = {
         "peers": peers,
