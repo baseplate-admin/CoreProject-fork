@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +31,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Increase this in future
+# If you increase this make sure to run `migrations`
+DISCRIMINATOR_LENGTH = 4
 
 # Application definition
 
@@ -53,6 +60,24 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    MIDDLEWARE += (
+        # Debug Toolbar Middleware
+        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        # CProfile middleware
+        # https://github.com/omarish/django-cprofile-middleware/blob/80e27f3876949e0d9c452c0e48ed03d73e026b73/README.md#installing
+        "django_cprofile_middleware.middleware.ProfilerMiddleware",
+        # Browser Reload Middleware
+        # "django_browser_reload.middleware.BrowserReloadMiddleware",
+    )
+
+# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#configure-internal-ips
+if DEBUG:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -76,10 +101,21 @@ ASGI_APPLICATION = "auth.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# POSTGRES
+# https://www.enterprisedb.com/postgres-tutorials/how-use-postgresql-django
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        # Database name
+        "NAME": os.environ.get("POSTGRES_NAME", "auth"),
+        "USER": os.environ.get("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "supersecretpassword"),
+        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "PORT": os.environ.get("POSTGRES_PORT", 5432),
+        # https://stackoverflow.com/questions/23504483/django-conn-max-age-setting-error
+        # "CONN_MAX_AGE": 10,
+        "CONN_HEALTH_CHECKS": True,
     }
 }
 
@@ -100,6 +136,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+]
+
+# Username or Email backend
+# https://stackoverflow.com/questions/25316765/log-in-user-using-either-email-address-or-username-in-django#35836674
+
+AUTHENTICATION_BACKENDS = ["apps.user.backends.EmailOrUsernameModelBackend"]
+
+# Password hashers
+# https://docs.djangoproject.com/en/3.2/topics/auth/passwords/#using-argon2-with-django
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
 
 
