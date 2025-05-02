@@ -16,6 +16,12 @@ import os
 
 load_dotenv()
 
+# https://github.com/typeddjango/django-stubs/tree/54a1e894257f6eea49b63fcd3a6eb89af00daf55/django_stubs_ext#usage
+import django_stubs_ext
+
+django_stubs_ext.monkeypatch()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,7 +53,12 @@ INSTALLED_APPS = [
     # Custom apps
     "apps.users",
 ]
+if DEBUG:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
 
+    
 AUTH_USER_MODEL = "users.CustomUser"
 
 MIDDLEWARE = [

@@ -5,7 +5,6 @@ from apps.users.models import CustomUser
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import AbstractBaseUser
 from django.db.models import Q
-from django.http import HttpRequest
 
 
 class EmailOrUsernameModelBackend(ModelBackend):
@@ -39,7 +38,7 @@ class EmailOrUsernameModelBackend(ModelBackend):
 
     def authenticate(
         self,
-        request: HttpRequest | None,
+        *args: Any,
         username: str | None = None,
         password: str | None = None,
         **kwargs: Any,

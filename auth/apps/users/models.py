@@ -1,3 +1,5 @@
+import uuid
+from typing import Any
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -5,16 +7,18 @@ from django.conf import settings
 
 from apps.users.validators import username_validator
 from django.core.validators import RegexValidator
+from dynamic_filenames import FilePattern
+
+from django.utils import timezone
+from .managers import UserManager
+
 # Create your models here.
+
+avatar = FilePattern(filename_pattern="avatar/{uuid:s}{ext}")
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(
-        _("email address"),
-        blank=False,
-        unique=True,
-        help_text=_("Required. A valid email with a valid domain"),
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     username = models.CharField(
         _("username"),
@@ -34,8 +38,55 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             "unique": _("A user with that username already exists."),
         },
     )
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    email = models.EmailField(
+        _("email address"),
+        blank=False,
+        unique=True,
+        help_text=_("Required. A valid email with a valid domain"),
+    )
+    is_staff = models.BooleanField(
+        _("staff status"),
+        default=False,
+        help_text=_("Designates whether the user can log into this admin site."),
+    )
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
+        ),
+    )
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
-    def __str__(self):
-        return f"{self.pk}. {self.email}"
+    avatar = models.ImageField(
+        upload_to=avatar,
+        default=None,
+        blank=True,
+        null=True,
+    )
+    avatar_provider = models.URLField(
+        default="https://seccdn.libravatar.org/avatar/{EMAIL}?s=512",
+    )
+
+    objects = UserManager()
+
+    # Django specific fields
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email"]
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.username
+
+    class Meta:
+        db_table = "user"
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
+        unique_together = [
+            ("username", "email"),
+        ]
