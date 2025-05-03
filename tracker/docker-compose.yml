@@ -1,6 +1,6 @@
 services:
   redis:
-    image: redis:7.4.3-alpine
+    image: redis:8.0.0-alpine
     container_name: redis
     restart: unless-stopped
     ports:
@@ -49,7 +49,6 @@ services:
       - backend
 
   nginx:
-    # build instead of pull
     build:
       context: ./nginx
       dockerfile: Dockerfile
