@@ -1,6 +1,6 @@
 import time
 
-from quart_redis import get_redis
+from quart_redis import get_redis  # type: ignore
 
 from coreproject_tracker.constants import HASH_EXPIRE_TIME
 
@@ -15,7 +15,7 @@ async def hset(hash_key: str, field: str, value: str, expire_time: int) -> None:
     await r.expire(hash_key, HASH_EXPIRE_TIME)
 
 
-async def hget(hash_key: str) -> None | dict[str, str | int]:
+async def hget(hash_key: str) -> None | dict[str, str]:
     r = get_redis()
 
     # Retrieve all fields and their values from the hash

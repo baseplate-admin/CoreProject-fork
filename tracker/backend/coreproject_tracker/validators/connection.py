@@ -13,5 +13,5 @@ def validate_connection_id(inst: Any, attr: Attribute, value: Optional[bytes]) -
         connection_id_unpacked = from_uint64(value)
         if connection_id_unpacked != CONNECTION_ID:
             raise ValueError(
-                f"`{attr}` of `{inst}` is {value} which not {CONNECTION_ID}"
+                f"`{attr}` of `{inst}` is {value!r} which not {CONNECTION_ID}"
             )

@@ -2,7 +2,6 @@ import logging
 import platform
 from http import HTTPStatus
 from importlib.metadata import version
-from typing import cast
 
 import bencodepy  # type: ignore
 from quart import Blueprint, json, jsonify, request
@@ -78,7 +77,6 @@ async def http_endpoint():
 
     for peer in await get_n_random_items(redis_data.values(), data.numwant):
         try:
-            peer = cast(str, peer)
             with rollback_on_exception(peers, peers6, seeders, leechers):
                 peer_data = RedisDatastructure(**json.loads(peer))
 

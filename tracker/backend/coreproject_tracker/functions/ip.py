@@ -15,7 +15,7 @@ def convert_str_to_ip_object(
         return False
 
 
-async def addr_to_ip_port(addr: list[str]) -> tuple[str, int]:
+async def addr_to_ip_port(addr: str) -> tuple[str, int]:
     """Convert address in the format [IP]:[PORT] to a tuple (IP, PORT)."""
     if not isinstance(addr, str):
         raise ValueError("Address must be a string in the format [IP]:[PORT]")
@@ -50,6 +50,8 @@ def convert_ipv4_coded_ipv6_to_ipv4(ip: str) -> bool | str | None:
     # Check if it's an IPv6 address and IPv4-mapped
     if isinstance(ip_obj, ipaddress.IPv6Address) and ip_obj.ipv4_mapped:
         return str(ip_obj.ipv4_mapped)
+
+    return None
 
 
 async def check_ip_type(ip: str) -> bool | IP:
