@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 import { useBackendData } from "@/hooks/useBackendData";
-import React, { useMemo } from "react";
+import { FunctionComponent, SVGProps, useMemo } from "react";
 import { BackendData, RedisData } from "@/types/api";
 import RedisLogo from "@/icons/logos/redis.svg";
 import PythonLogo from "@/icons/logos/python.svg";
@@ -58,8 +58,8 @@ function VersionCardComponent({ data }: { data: BackendData }) {
   return (
     <div className="grid grid-cols-1 items-center justify-center gap-10 md:grid-cols-3">
       {mapping.map((value, index) => {
-        const IconComponent = value.icon as React.FunctionComponent<
-          React.SVGProps<SVGSVGElement>
+        const IconComponent = value.icon as FunctionComponent<
+          SVGProps<SVGSVGElement>
         >;
 
         return (

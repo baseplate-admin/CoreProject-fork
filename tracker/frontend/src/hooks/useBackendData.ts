@@ -3,6 +3,8 @@ import useSWR from "swr";
 import { API_URL } from "@/constants/url";
 import { BackendData } from "@/types/api";
 
+export const URL = API_URL;
+
 const fetcher = async (url: URL) => {
   const res = await fetch(url);
 

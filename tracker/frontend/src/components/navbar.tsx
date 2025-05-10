@@ -107,3 +107,5 @@ export function Navbar() {
     </div>
   );
 }
+
+Navbar.displayName = "Custom-Navbar";
