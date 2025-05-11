@@ -30,7 +30,7 @@ export function Navbar() {
         <div className="flex flex-col items-start justify-center">
           <div className="hidden h-3 w-40 md:block">
             <div className="relative flex h-10 w-[180px] items-center justify-center">
-              <div className="dark:bg-background bg-primary absolute inset-0 rounded-md p-2"></div>
+              <div className="bg-primary absolute inset-0 rounded-md p-2 dark:bg-transparent"></div>
               <CoreProjectIcon
                 width="150"
                 height="25"

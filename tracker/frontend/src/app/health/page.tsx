@@ -119,95 +119,6 @@ function HttpCard() {
   );
 }
 
-function WebsocketCard() {
-  const [status, setStatus] = useState<"loading" | "connected" | "error">(
-    "loading",
-  );
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    const ws = new WebSocket(WS_TRACKER_ENDPOINT);
-
-    const handleError = (errorMessage: string, closeReason?: string) => {
-      const message = closeReason
-        ? `${errorMessage}: ${closeReason}`
-        : errorMessage;
-      setStatus("error");
-      setError(new Error(message));
-    };
-
-    ws.onopen = () => {
-      setStatus("connected");
-      setError(null);
-    };
-
-    ws.onerror = () => {
-      handleError("WebSocket connection error");
-    };
-
-    ws.onclose = (event) => {
-      if (!event.wasClean) {
-        handleError("WebSocket connection closed unexpectedly", event.reason);
-      }
-    };
-
-    return () => {
-      // Close connection when component unmounts
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.close();
-      }
-    };
-  }, []);
-
-  const getStatusContent = () => {
-    switch (status) {
-      case "loading":
-        return {
-          icon: <LoaderCircle className="animate-spin" />,
-          text: "Checking",
-          description:
-            "Checking if the connection to the tracker is possible with websocket",
-        };
-      case "connected":
-        return {
-          icon: <CheckCheck className="text-green-400" />,
-          text: "Websocket Connection Established",
-          description: "Successfully connected to WebSocket endpoint",
-        };
-      case "error":
-        return {
-          icon: <X className="text-red-500" />,
-          text: error?.message || "Unknown error occurred",
-          description: "Failed to establish WebSocket connection",
-        };
-    }
-  };
-
-  const statusContent = getStatusContent();
-
-  return (
-    <Card className="md:h-[22vh] lg:h-[17vh]">
-      <CardHeader>
-        <CardTitle>Websocket Status</CardTitle>
-        <CardDescription>{statusContent.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex h-full flex-col items-center justify-center gap-2">
-          {statusContent.icon}
-          <p
-            className={cn(
-              "whitespace-nowrap",
-              status === "error" ? "text-red-300" : "text-primary/90",
-            )}
-          >
-            {statusContent.text}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
 function WebsocketTrackerCard() {
   const SHOW_CONSOLE = process.env.NODE_ENV === "development";
   const [status, setStatus] = useState<{
@@ -349,8 +260,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 items-center justify-center gap-10 md:grid-cols-3">
-        <WebsocketCard />
+      <div className="grid grid-cols-1 items-center justify-center gap-10 md:grid-cols-2">
         <HttpCard />
         <WebsocketTrackerCard />
       </div>
