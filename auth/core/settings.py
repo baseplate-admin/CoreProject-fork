@@ -58,7 +58,7 @@ if DEBUG:
         "debug_toolbar",
     ]
 
-    
+
 AUTH_USER_MODEL = "users.CustomUser"
 
 MIDDLEWARE = [
@@ -106,7 +106,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = "auth.asgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 
 # Database
@@ -152,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Username or Email backend
 # https://stackoverflow.com/questions/25316765/log-in-user-using-either-email-address-or-username-in-django#35836674
 
-AUTHENTICATION_BACKENDS = ["apps.user.backends.EmailOrUsernameModelBackend"]
+AUTHENTICATION_BACKENDS = ["apps.users.backends.EmailOrUsernameModelBackend"]
 
 # Password hashers
 # https://docs.djangoproject.com/en/3.2/topics/auth/passwords/#using-argon2-with-django
