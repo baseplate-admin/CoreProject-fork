@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from ..mixins import UUIDPrimaryKeyMixin
+from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin
 
 CLIENT_TYPES = [
     ("animecore", "AnimeCore"),
@@ -8,7 +8,7 @@ CLIENT_TYPES = [
 ]
 
 
-class Client(UUIDPrimaryKeyMixin, models.Model):
+class Client(UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin, models.Model):  # type: ignore
     client_id = models.CharField(max_length=100, unique=True)
     client_secret = models.CharField(max_length=255, blank=True, null=True)
     client_name = models.CharField(max_length=200)
@@ -28,8 +28,6 @@ class Client(UUIDPrimaryKeyMixin, models.Model):
         help_text="Allowed grant types for the client",
     )
     jwks_uri = models.URLField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.client_name
