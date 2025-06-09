@@ -1,10 +1,11 @@
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 CLIENT_TYPES = [
-    ("confidential", "Confidential"),
-    ("public", "Public"),
+    ("animecore", "AnimeCore"),
+    ("soundcore", "SoundCore"),
 ]
 
 
@@ -18,7 +19,11 @@ class Client(models.Model):
         max_length=20, choices=CLIENT_TYPES, default="confidential"
     )
     redirect_uris = models.TextField(help_text="Comma separated URIs")
-    scope = models.TextField(default="openid profile email")
+    scope = ArrayField(
+        models.CharField(max_length=100),
+        default=["openid", "profile", "email"],
+        help_text="Scopes that the client can request",
+    )
     require_pkce = models.BooleanField(default=False)
     allowed_grant_types = models.TextField(default="authorization_code,refresh_token")
     jwks_uri = models.URLField(blank=True, null=True)

@@ -38,16 +38,15 @@ class UserManager(
         **extra_fields: Any,
     ) -> "CustomUser":
         """Create and save a SuperUser with the given email and password."""
-        for key in ("is_staff","is_superuser","is_active"):
+        for key in ("is_staff", "is_superuser", "is_active"):
             extra_fields.setdefault(key, True)
 
         # Sanity Check
         for key, value in {
-            "is_staff":_("Superuser must have is_staff=True."),
-            "is_superuser":_("Superuser must have is_superuser=True."),
-        }:
+            "is_staff": _("Superuser must have is_staff=True."),
+            "is_superuser": _("Superuser must have is_superuser=True."),
+        }.items():
             if extra_fields.get(key) is not True:
                 raise ValueError(value)
-    
 
         return self.create_user(email, password, **extra_fields)

@@ -6,43 +6,91 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Client',
+            name="Client",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('client_id', models.CharField(max_length=100, unique=True)),
-                ('client_secret', models.CharField(blank=True, max_length=255, null=True)),
-                ('client_name', models.CharField(max_length=200)),
-                ('client_type', models.CharField(choices=[('confidential', 'Confidential'), ('public', 'Public')], default='confidential', max_length=20)),
-                ('redirect_uris', models.TextField(help_text='Comma separated URIs')),
-                ('scope', models.TextField(default='openid profile email')),
-                ('require_pkce', models.BooleanField(default=False)),
-                ('allowed_grant_types', models.TextField(default='authorization_code,refresh_token')),
-                ('jwks_uri', models.URLField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("client_id", models.CharField(max_length=100, unique=True)),
+                (
+                    "client_secret",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("client_name", models.CharField(max_length=200)),
+                (
+                    "client_type",
+                    models.CharField(
+                        choices=[
+                            ("confidential", "Confidential"),
+                            ("public", "Public"),
+                        ],
+                        default="confidential",
+                        max_length=20,
+                    ),
+                ),
+                ("redirect_uris", models.TextField(help_text="Comma separated URIs")),
+                ("scope", models.TextField(default="openid profile email")),
+                ("require_pkce", models.BooleanField(default=False)),
+                (
+                    "allowed_grant_types",
+                    models.TextField(default="authorization_code,refresh_token"),
+                ),
+                ("jwks_uri", models.URLField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='AuthorizationCode',
+            name="AuthorizationCode",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(max_length=255, unique=True)),
-                ('redirect_uri', models.TextField()),
-                ('scope', models.TextField()),
-                ('nonce', models.CharField(blank=True, max_length=255, null=True)),
-                ('code_challenge', models.CharField(blank=True, max_length=255, null=True)),
-                ('code_challenge_method', models.CharField(blank=True, max_length=20, null=True)),
-                ('expires_at', models.DateTimeField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.client')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("code", models.CharField(max_length=255, unique=True)),
+                ("redirect_uri", models.TextField()),
+                ("scope", models.TextField()),
+                ("nonce", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "code_challenge",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "code_challenge_method",
+                    models.CharField(blank=True, max_length=20, null=True),
+                ),
+                ("expires_at", models.DateTimeField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="users.client"
+                    ),
+                ),
             ],
         ),
     ]

@@ -1,9 +1,8 @@
 import contextlib
-from typing import Any, cast
+from typing import Any
 
 from apps.users.models import CustomUser
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import AbstractBaseUser
 from django.db.models import Q
 
 
@@ -42,6 +41,6 @@ class EmailOrUsernameModelBackend(ModelBackend):
         username: str | None = None,
         password: str | None = None,
         **kwargs: Any,
-    ) -> AbstractBaseUser | None:
+    ) -> CustomUser | None:
         user_model = self.get_user_given_username_and_password(username, password)
-        return cast(AbstractBaseUser, user_model)
+        return user_model
