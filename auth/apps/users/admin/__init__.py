@@ -1,4 +1,6 @@
 from .user import CustomUserAdmin as CustomUserAdmin
+from .client import ClientAdmin as ClientAdmin
+
 
 # MoneyPatch
 # https://stackoverflow.com/questions/6191662/django-admin-login-form-overriding-max-length-failing

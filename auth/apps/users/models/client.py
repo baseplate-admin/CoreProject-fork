@@ -18,11 +18,15 @@ class Client(UUIDPrimaryKeyMixin, models.Model):
     redirect_uris = models.TextField(help_text="Comma separated URIs")
     scope = ArrayField(
         models.TextField(),
-        default=["openid", "profile", "email"],
+        # default=["openid", "profile", "email"],
         help_text="Scopes that the client can request",
     )
     require_pkce = models.BooleanField(default=False)
-    allowed_grant_types = models.TextField(default="authorization_code,refresh_token")
+    allowed_grant_types = ArrayField(
+        models.TextField(),
+        # default=["authorization_code", "refresh_token"],
+        help_text="Allowed grant types for the client",
+    )
     jwks_uri = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

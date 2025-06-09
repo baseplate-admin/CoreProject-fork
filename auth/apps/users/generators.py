@@ -1,4 +1,4 @@
-import ulid
+from ulid import microsecond as ulid
 
 __all__ = ["generate_ulid"]
 

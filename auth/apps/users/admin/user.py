@@ -32,7 +32,8 @@ class CustomUserAdmin(DjangoUserAdmin):
         "is_active",
     )
     readonly_fields = (
-        # "created_at",
+        "id",
+        "created_at",
         "last_login",
     )
 
@@ -41,6 +42,7 @@ class CustomUserAdmin(DjangoUserAdmin):
             None,
             {
                 "fields": (
+                    "id",
                     "username",
                     "password",
                 )
@@ -54,7 +56,7 @@ class CustomUserAdmin(DjangoUserAdmin):
                     "last_name",
                     "email",
                     "avatar",
-                    "avatar_provider",
+                    # "avatar_provider",
                 )
             },
         ),
