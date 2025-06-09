@@ -10,14 +10,16 @@ from django.core.validators import RegexValidator
 from dynamic_filenames import FilePattern
 
 from django.utils import timezone
-from .managers import UserManager
+
+from ..managers import UserManager
+from ..mixins import CreatedAtMixin, UpdatedAtMixin
 
 # Create your models here.
 
 avatar = FilePattern(filename_pattern="avatar/{uuid:s}{ext}")
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin, CreatedAtMixin, UpdatedAtMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     username = models.CharField(
@@ -67,9 +69,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
-    avatar_provider = models.URLField(
-        default="https://seccdn.libravatar.org/avatar/{EMAIL}?s=512",
-    )
+    # avatar_provider = models.URLField(default="https://seccdn.libravatar.org/avatar/{EMAIL}?s=512")
 
     objects = UserManager()
 
@@ -83,7 +83,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return self.username
 
-    class Meta:
+    class Meta:  # type: ignore[misc]
         db_table = "user"
         verbose_name = _("user")
         verbose_name_plural = _("users")

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Custom apps
     "apps.users",
+    # Rest Framework
+    "ninja",
 ]
 if DEBUG:
     INSTALLED_APPS += [
@@ -69,6 +71,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Enable Put and Patch methods
+    "ninja.compatibility.files.fix_request_files_middleware",
 ]
 
 if DEBUG:
