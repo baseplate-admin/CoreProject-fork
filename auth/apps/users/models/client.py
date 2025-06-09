@@ -3,19 +3,20 @@ from django.contrib.postgres.fields import ArrayField
 from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin
 
 CLIENT_TYPES = [
-    ("animecore", "AnimeCore"),
-    ("soundcore", "SoundCore"),
+    ("confidential", "Confidential"),
+    ("public", "Public"),
 ]
 
 
-class Client(UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin, models.Model):  # type: ignore
+class Client(UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin):  # type: ignore
     client_id = models.CharField(max_length=100, unique=True)
     client_secret = models.CharField(max_length=255, blank=True, null=True)
     client_name = models.CharField(max_length=200)
-    client_type = models.CharField(
-        max_length=20, choices=CLIENT_TYPES, default="confidential"
+    client_type = models.CharField(max_length=20, choices=CLIENT_TYPES)
+    redirect_uris = ArrayField(
+        models.TextField(),
+        help_text="Comma separated URIs",
     )
-    redirect_uris = models.TextField(help_text="Comma separated URIs")
     scope = ArrayField(
         models.TextField(),
         # default=["openid", "profile", "email"],
