@@ -26,6 +26,7 @@ mypy_path = "auth"
 exclude = ["migrations"]
 namespace_packages = true
 explicit_package_bases = true
+ignore_missing_imports = true
 
 [tool.django-stubs]
 django_settings_module = "core.settings"
