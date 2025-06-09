@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -118,21 +117,28 @@ ASGI_APPLICATION = "core.asgi.application"
 
 # POSTGRES
 # https://www.enterprisedb.com/postgres-tutorials/how-use-postgresql-django
+import dj_database_url
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        # Database name
-        "NAME": os.environ.get("POSTGRES_NAME", "auth"),
-        "USER": os.environ.get("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "supersecretpassword"),
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-        "PORT": os.environ.get("POSTGRES_PORT", 5432),
-        # https://stackoverflow.com/questions/23504483/django-conn-max-age-setting-error
-        # "CONN_MAX_AGE": 10,
-        "CONN_HEALTH_CHECKS": True,
-    }
+    "default": dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         # Database name
+#         "NAME": os.environ.get("POSTGRES_NAME", "auth"),
+#         "USER": os.environ.get("POSTGRES_USER", "postgres"),
+#         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "supersecretpassword"),
+#         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+#         "PORT": os.environ.get("POSTGRES_PORT", 5432),
+#         # https://stackoverflow.com/questions/23504483/django-conn-max-age-setting-error
+#         # "CONN_MAX_AGE": 10,
+#         "CONN_HEALTH_CHECKS": True,
+#     }
+# }
 
 
 # Password validation

@@ -1,4 +1,3 @@
-import uuid
 from typing import Any
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
@@ -12,16 +11,20 @@ from dynamic_filenames import FilePattern
 from django.utils import timezone
 
 from ..managers import UserManager
-from ..mixins import CreatedAtMixin, UpdatedAtMixin
+from ..mixins import CreatedAtMixin, UpdatedAtMixin, UUIDPrimaryKeyMixin
 
 # Create your models here.
 
 avatar = FilePattern(filename_pattern="avatar/{uuid:s}{ext}")
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin, CreatedAtMixin, UpdatedAtMixin):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+class CustomUser(
+    UUIDPrimaryKeyMixin,
+    AbstractBaseUser,
+    PermissionsMixin,
+    CreatedAtMixin,
+    UpdatedAtMixin,
+):
     username = models.CharField(
         _("username"),
         max_length=150,

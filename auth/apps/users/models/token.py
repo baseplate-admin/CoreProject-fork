@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils import timezone
 
+from ..mixins import UUIDPrimaryKeyMixin
 
-class Token(models.Model):
+
+class Token(UUIDPrimaryKeyMixin, models.Model):
     user = models.ForeignKey("CustomUser", on_delete=models.CASCADE)
     client = models.ForeignKey("Client", on_delete=models.CASCADE)
     access_token = models.CharField(max_length=255, unique=True)

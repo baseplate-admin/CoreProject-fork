@@ -1,7 +1,6 @@
-import uuid
-
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from ..mixins import UUIDPrimaryKeyMixin
 
 CLIENT_TYPES = [
     ("animecore", "AnimeCore"),
@@ -9,9 +8,7 @@ CLIENT_TYPES = [
 ]
 
 
-class Client(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+class Client(UUIDPrimaryKeyMixin, models.Model):
     client_id = models.CharField(max_length=100, unique=True)
     client_secret = models.CharField(max_length=255, blank=True, null=True)
     client_name = models.CharField(max_length=200)
@@ -20,7 +17,7 @@ class Client(models.Model):
     )
     redirect_uris = models.TextField(help_text="Comma separated URIs")
     scope = ArrayField(
-        models.CharField(max_length=100),
+        models.TextField(),
         default=["openid", "profile", "email"],
         help_text="Scopes that the client can request",
     )
