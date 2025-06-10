@@ -127,21 +127,6 @@ DATABASES = {
         conn_health_checks=True,
     ),
 }
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         # Database name
-#         "NAME": os.environ.get("POSTGRES_NAME", "auth"),
-#         "USER": os.environ.get("POSTGRES_USER", "postgres"),
-#         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "supersecretpassword"),
-#         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-#         "PORT": os.environ.get("POSTGRES_PORT", 5432),
-#         # https://stackoverflow.com/questions/23504483/django-conn-max-age-setting-error
-#         # "CONN_MAX_AGE": 10,
-#         "CONN_HEALTH_CHECKS": True,
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

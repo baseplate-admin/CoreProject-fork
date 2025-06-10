@@ -7,69 +7,86 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('oidc', '0001_initial'),
+        ("oidc", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='authorizationcode',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="authorizationcode",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddIndex(
-            model_name='client',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['redirect_uris'], name='client_redirect_uris_gin'),
+            model_name="client",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["redirect_uris"], name="client_redirect_uris_gin"
+            ),
         ),
         migrations.AddField(
-            model_name='authorizationcode',
-            name='client',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='oidc.client'),
+            model_name="authorizationcode",
+            name="client",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="oidc.client"
+            ),
         ),
         migrations.AddField(
-            model_name='token',
-            name='client',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='oidc.client'),
+            model_name="token",
+            name="client",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="oidc.client"
+            ),
         ),
         migrations.AddField(
-            model_name='token',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="token",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddIndex(
-            model_name='authorizationcode',
-            index=django.contrib.postgres.indexes.BrinIndex(fields=['expires_at'], name='code_expires_brin'),
+            model_name="authorizationcode",
+            index=django.contrib.postgres.indexes.BrinIndex(
+                fields=["expires_at"], name="code_expires_brin"
+            ),
         ),
         migrations.AddIndex(
-            model_name='authorizationcode',
-            index=models.Index(fields=['used_at'], name='code_used_index'),
+            model_name="authorizationcode",
+            index=models.Index(fields=["used_at"], name="code_used_index"),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=models.Index(fields=['access_token'], name='token_access_idx'),
+            model_name="token",
+            index=models.Index(fields=["access_token"], name="token_access_idx"),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=models.Index(fields=['refresh_token'], name='token_refresh_idx'),
+            model_name="token",
+            index=models.Index(fields=["refresh_token"], name="token_refresh_idx"),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=django.contrib.postgres.indexes.BrinIndex(fields=['expires_at'], name='token_expires_brin'),
+            model_name="token",
+            index=django.contrib.postgres.indexes.BrinIndex(
+                fields=["expires_at"], name="token_expires_brin"
+            ),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=django.contrib.postgres.indexes.BrinIndex(fields=['created_at'], name='token_created_brin'),
+            model_name="token",
+            index=django.contrib.postgres.indexes.BrinIndex(
+                fields=["created_at"], name="token_created_brin"
+            ),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=models.Index(fields=['revoked_at'], name='token_revoked_idx'),
+            model_name="token",
+            index=models.Index(fields=["revoked_at"], name="token_revoked_idx"),
         ),
         migrations.AddIndex(
-            model_name='token',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['scope'], name='token_scope_gin'),
+            model_name="token",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["scope"], name="token_scope_gin"
+            ),
         ),
     ]
