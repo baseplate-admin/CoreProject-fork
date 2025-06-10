@@ -13,6 +13,7 @@ from .schemas import (
     UserInfoResponse,
     DiscoveryResponse,
 )
+from django.conf import settings
 from .utils import (
     encode_jwt,
     create_id_token,
@@ -23,33 +24,10 @@ from .utils import (
     verify_pkce,
 )
 import datetime
+from .helper import validate_redirect_uri, authenticate_client
 
 
 router = Router()
-
-
-def validate_redirect_uri(client, redirect_uri):
-    return redirect_uri in client.redirect_uris.split(",")
-
-
-def authenticate_client(client_id, client_secret=None):
-    try:
-        client = Client.objects.get(client_id=client_id)
-
-        # For public clients, skip secret validation
-        if client.client_type == "confidential" and not client_secret:
-            return None
-
-        # For confidential clients, validate secret if provided
-        if (
-            client.client_type == "confidential"
-            and client_secret != client.client_secret
-        ):
-            return None
-
-        return client
-    except Client.DoesNotExist:
-        return None
 
 
 
@@ -89,7 +67,7 @@ def authorization_endpoint(request, params: AuthorizationRequest):
         nonce=params.nonce,
         code_challenge=params.code_challenge,
         code_challenge_method=params.code_challenge_method,
-        expires_at=timezone.now() + datetime.timedelta(minutes=10),
+        expires_at=timezone.now() + settings.CLIENT_EXPIRERY_TIME,
     )
 
     return redirect(f"{params.redirect_uri}?code={code.code}&state={params.state}")

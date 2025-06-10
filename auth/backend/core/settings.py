@@ -183,3 +183,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Custom Config
+import datetime 
+CLIENT_EXPIRERY_TIME = datetime.timedelta(days=30) # 1 month
