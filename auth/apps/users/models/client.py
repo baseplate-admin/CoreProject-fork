@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
 from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin
 
 CLIENT_TYPES = [
@@ -32,3 +33,9 @@ class Client(UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin):  # type: igno
 
     def __str__(self):
         return self.client_name
+
+    class Meta(UUIDPrimaryKeyMixin.Meta, CreatedAtMixin.Meta, UpdatedAtMixin.Meta):
+        indexes = [
+            # Proper array index without operator class specification
+            GinIndex(fields=["redirect_uris"], name="client_redirect_uris_gin"),
+        ]
