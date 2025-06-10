@@ -4,7 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth import login
 from apps.users.models import CustomUser
-from .models import Client, AuthorizationCode, Token
+from .models import Client, AuthorizationCode
 from django.utils import timezone
 from .schemas import (
     AuthorizationRequest,
@@ -23,8 +23,7 @@ from .utils import (
     verify_pkce,
 )
 import datetime
-from ninja.errors import HttpError
-from ninja.security import HttpBearer
+
 
 router = Router()
 
@@ -52,19 +51,6 @@ def authenticate_client(client_id, client_secret=None):
     except Client.DoesNotExist:
         return None
 
-
-class TokenAuth(HttpBearer):
-    def authenticate(self, request, token):
-        try:
-            # Lookup token in database
-            token_obj = Token.objects.get(access_token=token)
-
-            # Check expiration
-            if token_obj.is_valid():
-                return token_obj.user
-        except Token.DoesNotExist:
-            pass
-        return None
 
 
 @router.get("/authorize", url_name="authorize")

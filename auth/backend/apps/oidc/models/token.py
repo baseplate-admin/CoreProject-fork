@@ -18,7 +18,7 @@ class Token(UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin):  # type: ignor
     revoked_at = models.DateTimeField(blank=True, null=True)
 
     def is_valid(self):
-        return timezone.now() < self.expires_at
+        return timezone.now() < self.expires_at and not self.revoked_at
 
     class Meta(UUIDPrimaryKeyMixin.Meta, CreatedAtMixin.Meta, ExpiresAtMixin.Meta):
         indexes = [
