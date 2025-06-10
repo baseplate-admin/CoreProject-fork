@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from ..generators import generate_ulid
+from generators import generate_ulid
 
 
 class UUIDPrimaryKeyMixin(models.Model):

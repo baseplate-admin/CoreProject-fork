@@ -2,11 +2,11 @@ import jwt
 import datetime
 import hashlib
 import base64
-import secrets
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 from django.conf import settings
 from django.utils import timezone
+import secrets
 
 
 def generate_rsa_key():

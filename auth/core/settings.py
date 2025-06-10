@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Custom apps
     "apps.users",
+    "apps.oidc",
     # Rest Framework
     "ninja",
 ]

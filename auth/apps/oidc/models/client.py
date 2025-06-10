@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
-from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin
+from mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, UpdatedAtMixin
 
 CLIENT_TYPES = [
     ("confidential", "Confidential"),

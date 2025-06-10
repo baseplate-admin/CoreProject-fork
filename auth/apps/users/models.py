@@ -10,8 +10,8 @@ from dynamic_filenames import FilePattern
 
 from django.utils import timezone
 
-from ..managers import UserManager
-from ..mixins import CreatedAtMixin, UpdatedAtMixin, UUIDPrimaryKeyMixin
+from .managers import UserManager
+from mixins import CreatedAtMixin, UpdatedAtMixin, UUIDPrimaryKeyMixin
 
 # Create your models here.
 

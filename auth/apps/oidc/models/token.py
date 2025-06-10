@@ -2,11 +2,13 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.postgres.indexes import BrinIndex, GinIndex
 
-from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin
+from mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin
+
+from apps.users.models import CustomUser
 
 
 class Token(UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin):  # type: ignore
-    user = models.ForeignKey("CustomUser", on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     client = models.ForeignKey("Client", on_delete=models.CASCADE)
     access_token = models.CharField(max_length=255, unique=True)
     refresh_token = models.CharField(max_length=255, unique=True, blank=True, null=True)

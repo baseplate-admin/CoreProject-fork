@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.postgres.indexes import BrinIndex
 from django.utils import timezone
-from ..mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin
+from mixins import UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin
+
+from apps.users.models import CustomUser
 
 
 class AuthorizationCode(UUIDPrimaryKeyMixin, CreatedAtMixin, ExpiresAtMixin):  # type: ignore
-    user = models.ForeignKey("CustomUser", on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     client = models.ForeignKey("Client", on_delete=models.CASCADE)
     code = models.CharField(max_length=255, unique=True)
     redirect_uri = models.TextField()
