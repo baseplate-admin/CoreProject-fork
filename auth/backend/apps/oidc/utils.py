@@ -60,18 +60,6 @@ def create_id_token(user, client, scope, nonce, auth_time, access_token_hash=Non
     return id_token
 
 
-def create_access_token_payload(user, client, scope):
-    return {
-        "iss": settings.OIDC_ISSUER,
-        "sub": str(user.sub),
-        "aud": str(client.client_id),
-        "exp": (timezone.now() + datetime.timedelta(minutes=60)).timestamp(),
-        "iat": timezone.now().timestamp(),
-        "scope": " ".join(scope),
-        "client_id": str(client.client_id),
-    }
-
-
 def create_refresh_token_payload(user, client, scope):
     return {
         "iss": settings.OIDC_ISSUER,

@@ -16,7 +16,6 @@ from .auth import TokenAuth
 from .utils import (
     encode_jwt,
     create_id_token,
-    create_access_token_payload,
     generate_token_value,
     compute_at_hash,
     verify_pkce,
@@ -80,7 +79,7 @@ def token_endpoint(request, payload: TokenRequest):
             raise HttpError(401, "Invalid client credentials")
 
         try:
-            code_obj = AuthorizationCode.objects.get(id=payload.code, client=client)
+            code_obj = AuthorizationCode.objects.get(code=payload.code, client=client)
         except AuthorizationCode.DoesNotExist:
             raise HttpError(400, "Invalid grant")
 
@@ -102,41 +101,44 @@ def token_endpoint(request, payload: TokenRequest):
             ):
                 raise HttpError(400, "Invalid code_verifier")
 
+        # Generate tokens
         access_token_value = generate_token_value()
-        # access_token_payload = create_access_token_payload(
-        #     code_obj.user, client, code_obj.scope
-        # )
-        # access_token_jwt = encode_jwt(access_token_payload, settings.OIDC_PRIVATE_KEY)
 
-        id_token_payload = create_id_token(
-            code_obj.user,
-            client,
-            code_obj.scope,
-            code_obj.nonce,
-            code_obj.user.last_login,
-            access_token_hash=compute_at_hash(access_token_value),
+        # Encode JWT tokens
+        id_token = encode_jwt(
+            create_id_token(
+                code_obj.user,
+                client,
+                code_obj.scope,
+                code_obj.nonce,
+                code_obj.user.last_login,
+                access_token_hash=compute_at_hash(access_token_value),
+            ),
+            settings.OIDC_PRIVATE_KEY,
         )
-        id_token = encode_jwt(id_token_payload, settings.OIDC_PRIVATE_KEY)
 
-        refresh_token_value = None
-        if "refresh_token" in client.allowed_grant_types:
-            refresh_token_value = generate_token_value()
+        refresh_token_value = (
+            generate_token_value()
+            if "refresh_token" in client.allowed_grant_types
+            else None
+        )
 
-        access_token_expires = timezone.now() + datetime.timedelta(minutes=60)
-
+        # Create token record
         token = Token.objects.create(
             user=code_obj.user,
             client=client,
             access_token=access_token_value,
             refresh_token=refresh_token_value,
             scope=code_obj.scope,
-            expires_at=access_token_expires,
+            expires_at=timezone.now() + datetime.timedelta(minutes=60),
         )
 
+        # Revoke previous tokens
         Token.objects.filter(
             user=code_obj.user, client=client, revoked_at__isnull=True
         ).exclude(pk=token.pk).update(revoked_at=timezone.now())
 
+        # Mark code as used
         code_obj.used_at = timezone.now()
         code_obj.save()
 
@@ -164,31 +166,34 @@ def token_endpoint(request, payload: TokenRequest):
         if not old_token.is_valid():
             raise HttpError(400, "Refresh token expired or revoked")
 
+        # Generate new tokens
         access_token_value = generate_token_value()
-
-        id_token_payload = create_id_token(
-            old_token.user,
-            client,
-            old_token.scope,
-            None,
-            old_token.user.last_login,
-            access_token_hash=compute_at_hash(access_token_value),
-        )
-        id_token = encode_jwt(id_token_payload, settings.OIDC_PRIVATE_KEY)
-
         new_refresh_token = generate_token_value()
 
-        access_token_expires = timezone.now() + datetime.timedelta(minutes=60)
+        # Encode JWT tokens
+        id_token = encode_jwt(
+            create_id_token(
+                old_token.user,
+                client,
+                old_token.scope,
+                None,
+                old_token.user.last_login,
+                access_token_hash=compute_at_hash(access_token_value),
+            ),
+            settings.OIDC_PRIVATE_KEY,
+        )
 
+        # Create new token record
         new_token = Token.objects.create(
             user=old_token.user,
             client=client,
             access_token=access_token_value,
             refresh_token=new_refresh_token,
             scope=old_token.scope,
-            expires_at=access_token_expires,
+            expires_at=timezone.now() + datetime.timedelta(minutes=60),
         )
 
+        # Revoke previous tokens
         Token.objects.filter(
             user=old_token.user, client=client, revoked_at__isnull=True
         ).exclude(pk=new_token.pk).update(revoked_at=timezone.now())
