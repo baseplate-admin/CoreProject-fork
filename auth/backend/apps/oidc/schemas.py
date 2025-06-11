@@ -8,7 +8,7 @@ class AuthorizationRequest(Schema):
     redirect_uri: str
     scope: str
     state: str
-    nonce: str
+    nonce: Optional[str] = None
     code_challenge: Optional[str] = None
     code_challenge_method: Optional[str] = None
 

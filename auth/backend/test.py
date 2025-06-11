@@ -2,7 +2,9 @@ import requests
 import secrets
 import hashlib
 import base64
+import json
 import logging
+import time
 from urllib.parse import urlencode, parse_qs, urlparse
 
 # Set up logging
@@ -21,7 +23,9 @@ class OIDCTester:
         authorization_endpoint: str = None,
         token_endpoint: str = None,
         userinfo_endpoint: str = None,
+        issuer: str = None,
         use_pkce: bool = True,
+        nonce_length: int = 16,
     ):
         """
         Initialize OIDC tester with configuration
@@ -34,7 +38,9 @@ class OIDCTester:
         :param authorization_endpoint: Authorization endpoint URL
         :param token_endpoint: Token endpoint URL
         :param userinfo_endpoint: Userinfo endpoint URL
+        :param issuer: Expected token issuer
         :param use_pkce: Enable PKCE (recommended)
+        :param nonce_length: Length of nonce value in bytes
         """
         self.client_id = client_id
         self.client_secret = client_secret
@@ -43,7 +49,9 @@ class OIDCTester:
         self.use_pkce = use_pkce
         self.state = secrets.token_urlsafe(16)
         self.code_verifier = self._generate_code_verifier() if use_pkce else None
+        self.nonce = secrets.token_urlsafe(nonce_length)
         self.tokens = {}
+        self.issuer = issuer
 
         # Discover endpoints if discovery URL provided
         if discovery_url:
@@ -62,6 +70,11 @@ class OIDCTester:
             self.authorization_endpoint = discovery_doc["authorization_endpoint"]
             self.token_endpoint = discovery_doc["token_endpoint"]
             self.userinfo_endpoint = discovery_doc.get("userinfo_endpoint")
+
+            # Set issuer if not already provided
+            if not self.issuer:
+                self.issuer = discovery_doc.get("issuer")
+
             logger.info("Discovered endpoints from %s", discovery_url)
         except Exception as e:
             logger.error("Discovery failed: %s", str(e))
@@ -80,7 +93,7 @@ class OIDCTester:
 
     def build_authorization_url(self) -> str:
         """
-        Construct authorization request URL
+        Construct authorization request URL with nonce
 
         :return: Complete authorization URL with parameters
         """
@@ -90,6 +103,7 @@ class OIDCTester:
             "redirect_uri": self.redirect_uri,
             "scope": self.scope,
             "state": self.state,
+            "nonce": self.nonce,  # Include nonce in request
         }
 
         if self.use_pkce:
@@ -117,8 +131,9 @@ class OIDCTester:
 
         if "error" in query:
             error = query["error"][0]
-            logger.error("Authorization error: %s", error)
-            raise ValueError(f"Authorization error: {error}")
+            error_desc = query.get("error_description", [""])[0]
+            logger.error("Authorization error: %s - %s", error, error_desc)
+            raise ValueError(f"Authorization error: {error} - {error_desc}")
 
         if "code" not in query:
             raise ValueError("Authorization code missing in response")
@@ -129,11 +144,14 @@ class OIDCTester:
 
         return {"code": query["code"][0], "state": response_state}
 
-    def exchange_code_for_tokens(self, code: str) -> dict:
+    def exchange_code_for_tokens(
+        self, code: str, validate_id_token: bool = True
+    ) -> dict:
         """
         Exchange authorization code for tokens
 
         :param code: Authorization code from redirect
+        :param validate_id_token: Perform ID token validation
         :return: Token response from server
         """
         data = {
@@ -151,19 +169,17 @@ class OIDCTester:
         # Add client secret if confidential client
         if self.client_secret:
             data["client_secret"] = self.client_secret
-            # Alternatively use basic auth:
-            # auth = (self.client_id, self.client_secret)
 
         try:
-            response = requests.post(
-                self.token_endpoint,
-                data=data,
-                headers=headers,
-                # auth=auth if using basic auth
-            )
+            response = requests.post(self.token_endpoint, data=data, headers=headers)
             response.raise_for_status()
             self.tokens = response.json()
             logger.info("Successfully obtained tokens")
+
+            # Validate ID token if present
+            if validate_id_token and "id_token" in self.tokens:
+                self.validate_id_token(self.tokens["id_token"])
+
             return self.tokens
         except requests.exceptions.HTTPError as e:
             logger.error("Token exchange failed: %s", e.response.text)
@@ -191,10 +207,11 @@ class OIDCTester:
             logger.error("Userinfo request failed: %s", e.response.text)
             raise
 
-    def refresh_tokens(self) -> dict:
+    def refresh_tokens(self, validate_id_token: bool = True) -> dict:
         """
         Refresh access token using refresh token
 
+        :param validate_id_token: Validate new ID token if included
         :return: New token response
         """
         if not self.tokens.get("refresh_token"):
@@ -214,20 +231,89 @@ class OIDCTester:
             response.raise_for_status()
             self.tokens = response.json()
             logger.info("Tokens refreshed successfully")
+
+            # Validate new ID token if present
+            if validate_id_token and "id_token" in self.tokens:
+                self.validate_id_token(self.tokens["id_token"])
+
             return self.tokens
         except requests.exceptions.HTTPError as e:
             logger.error("Token refresh failed: %s", e.response.text)
             raise
 
-    def validate_id_token(self, id_token: str = None) -> bool:
-        """Basic ID token validation (placeholder for actual implementation)"""
-        logger.warning(
-            "ID token validation not implemented. Use a proper JWT library for production."
-        )
-        # In a real implementation, you would:
-        # 1. Decode and verify JWT signature
-        # 2. Validate claims (iss, aud, exp, iat, nonce, etc.)
-        return True
+    def validate_id_token(self, id_token: str) -> bool:
+        """
+        Validate ID token claims (without cryptographic verification)
+
+        :param id_token: ID Token JWT
+        :return: True if basic validation passes
+        """
+        try:
+            # Split JWT into header, payload, signature
+            parts = id_token.split(".")
+            if len(parts) != 3:
+                raise ValueError("Invalid JWT structure")
+
+            # Decode payload
+            payload = parts[1]
+            # Add padding if needed
+            payload += "=" * (4 - len(payload) % 4)
+            claims = json.loads(base64.urlsafe_b64decode(payload))
+
+            # Validate claims
+            current_time = time.time()
+
+            # 1. Check issuer
+            if self.issuer and claims.get("iss") != self.issuer:
+                raise ValueError(
+                    f"Issuer mismatch: expected {self.issuer}, got {claims.get('iss')}"
+                )
+
+            # 2. Check audience
+            aud = claims.get("aud")
+            if not aud:
+                raise ValueError("Missing aud claim")
+
+            if isinstance(aud, list):
+                if self.client_id not in aud:
+                    raise ValueError(
+                        f"Client ID {self.client_id} not in audience {aud}"
+                    )
+            elif aud != self.client_id:
+                raise ValueError(
+                    f"Audience mismatch: expected {self.client_id}, got {aud}"
+                )
+
+            # 3. Check expiration
+            if claims.get("exp", 0) < current_time:
+                raise ValueError("Token has expired")
+
+            # 4. Check nonce
+            token_nonce = claims.get("nonce")
+            if token_nonce != self.nonce:
+                raise ValueError(
+                    f"Nonce mismatch: expected {self.nonce}, got {token_nonce}"
+                )
+
+            # 5. Check issued-at time
+            if claims.get("iat", current_time + 10) > current_time + 10:
+                raise ValueError("Token issued in the future")
+
+            logger.info("ID token claims validated successfully")
+            return True
+
+        except Exception as e:
+            logger.error("ID token validation failed: %s", str(e))
+            raise
+
+    def reset_nonce(self, length: int = 16) -> None:
+        """
+        Generate a new nonce value
+
+        :param length: Length of new nonce in bytes
+        """
+        self.nonce = secrets.token_urlsafe(length)
+        logger.info("Nonce reset to: %s", self.nonce)
 
 
 if __name__ == "__main__":

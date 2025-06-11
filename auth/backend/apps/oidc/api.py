@@ -1,5 +1,5 @@
 from typing import Any
-from ninja import Router
+from ninja import Router, Query
 from django.shortcuts import redirect, get_object_or_404
 from django.conf import settings
 from django.urls import reverse
@@ -31,7 +31,8 @@ router = Router()
 
 
 @router.get("/authorize", url_name="authorize")
-def authorization_endpoint(request, params: AuthorizationRequest):
+def authorization_endpoint(request, params: AuthorizationRequest = Query(...)):
+    print("HELLO")
     client = get_object_or_404(Client, client_id=params.client_id)
 
     # Validate redirect URI
