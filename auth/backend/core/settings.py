@@ -186,5 +186,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Custom Config
-import datetime 
-CLIENT_EXPIRERY_TIME = datetime.timedelta(days=30) # 1 month
+import datetime
+from apps.oidc.utils import generate_rsa_key
+
+CLIENT_EXPIRERY_TIME = datetime.timedelta(days=30)  # 1 month
+OIDC_ISSUER = "http://localhost:8000"
+OIDC_PRIVATE_KEY = generate_rsa_key()  # Generate at startup

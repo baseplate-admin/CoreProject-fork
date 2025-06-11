@@ -12,6 +12,7 @@ from .schemas import (
     UserInfoResponse,
     DiscoveryResponse,
 )
+from django.http import HttpRequest
 from .auth import TokenAuth
 from .utils import (
     encode_jwt,
@@ -239,14 +240,14 @@ def userinfo_endpoint(request) -> dict[str, Any]:
     response=DiscoveryResponse,
     url_name="oidc-config",
 )
-def discovery_endpoint(request) -> dict[str, Any]:
-    base_url = settings.OIDC_ISSUER
+def discovery_endpoint(request: HttpRequest) -> dict[str, Any]:
+    base_url = request.build_absolute_uri("/")[:-1]
     return {
         "issuer": base_url,
-        "authorization_endpoint": f"{base_url}/oidc/authorize/",
-        "token_endpoint": f"{base_url}/oidc/token/",
-        "userinfo_endpoint": f"{base_url}/oidc/userinfo/",
-        "jwks_uri": f"{base_url}/oidc/jwks/",
+        "authorization_endpoint": f"{base_url}{reverse('api-1.0.0:authorize')}",
+        "token_endpoint": f"{base_url}{reverse('api-1.0.0:token')}",
+        "userinfo_endpoint": f"{base_url}{reverse('api-1.0.0:userinfo')}",
+        "jwks_uri": f"{base_url}{reverse('api-1.0.0:jwks')}",
         "scopes_supported": ["openid", "profile", "email", "offline_access"],
         "response_types_supported": ["code"],
         "token_endpoint_auth_methods_supported": [
